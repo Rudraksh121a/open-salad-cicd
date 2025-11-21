@@ -1,36 +1,26 @@
-pipeline {
-    agent any
-
-    stages {
-        stage('Code') {
-            steps {
-                echo 'Cloning the code'
-                git url: "https://github.com/Rudraksh121a/open-salad-cicd.git",branch:"main"
-                 echo 'Cloning the code successful'
-                 sh "ls"
-                
-            }
-            
-        }
-        
-        stage('build') {
-            steps {
-                echo 'building the code with docker'
-                sh "docker compose up "
+@Library('Shared')_
+pipeline{
+    agent { label 'dev-server'}
+    
+    stages{
+        stage("Code clone"){
+            steps{
+            clone("https://github.com/Rudraksh121a/open-salad-cicd.git","main")
             }
         }
-        
-        
-        stage('Code1') {
-            steps {
-                echo 'Cloneing the code'
+        stage("Code Build"){
+            steps{
+            dockerbuild("notes-app","latest")
             }
         }
-        
-        
-        stage('Code2') {
-            steps {
-                echo 'Cloneing the code'
+        stage("Push to DockerHub"){
+            steps{
+                dockerpush("dockerHubCreds","notes-app","latest")
+            }
+        }
+        stage("Deploy"){
+            steps{
+                deploy()
             }
         }
         
