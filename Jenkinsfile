@@ -10,12 +10,12 @@ pipeline{
         }
         stage("Code Build"){
             steps{
-            dockerbuild("notes-app","latest")
+            dockerbuild("nextjs-app","latest")
             }
         }
         stage("Push to DockerHub"){
             steps{
-                dockerpush("dockerHubCreds","notes-app","latest")
+                dockerpush("dockerHubCreds","nextjs-app","latest")
             }
         }
         stage("Deploy"){
